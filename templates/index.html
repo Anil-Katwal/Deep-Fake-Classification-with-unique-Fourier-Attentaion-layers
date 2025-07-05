@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Fake Video Detection</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <h1>Deep Fake Detector</h1>
+                </div>
+                <p class="subtitle">Advanced AI-powered video authenticity verification using Fourier Attention Layers</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <div class="upload-card">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3>Upload Video for Analysis</h3>
+                        <p>Drag and drop your video file here or click to browse</p>
+                        <p class="file-types">Supported formats: MP4, AVI, MOV, MKV, WMV, FLV, WEBM</p>
+                        <input type="file" id="videoInput" accept="video/*" style="display: none;">
+                        <button class="upload-btn" onclick="document.getElementById('videoInput').click()">
+                            <i class="fas fa-folder-open"></i>
+                            Choose Video File
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- URL Input Section -->
+            <div class="url-section">
+                <div class="url-card">
+                    <div class="url-header">
+                        <h3><i class="fas fa-link"></i> Analyze Video from URL</h3>
+                        <p>Enter a video URL to analyze without downloading</p>
+                    </div>
+                    <div class="url-input-container">
+                        <div class="url-input-group">
+                            <input type="url" id="videoUrl" placeholder="Enter video URL (YouTube, Vimeo, direct video links...)" class="url-input">
+                            <button class="url-btn" onclick="analyzeFromUrl()">
+                                <i class="fas fa-search"></i>
+                                Analyze
+                            </button>
+                        </div>
+                        <div class="url-examples">
+                            <p>Examples:</p>
+                            <ul>
+                                <li>YouTube: https://youtube.com/watch?v=...</li>
+                                <li>Vimeo: https://vimeo.com/...</li>
+                                <li>Direct: https://example.com/video.mp4</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Player Section -->
+            <div class="video-section" id="videoSection" style="display: none;">
+                <div class="video-card">
+                    <div class="video-header">
+                        <h3>Video Preview</h3>
+                        <button class="close-btn" onclick="hideVideo()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="video-container">
+                        <video id="videoPlayer" controls preload="metadata">
+                            <source id="videoSource" src="" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="video-info">
+                            <div class="video-details">
+                                <span class="video-name" id="videoName"></span>
+                                <span class="video-size" id="videoSize"></span>
+                                <span class="video-url" id="videoUrlDisplay"></span>
+                            </div>
+                            <div class="video-controls">
+                                <button class="control-btn" onclick="togglePlayPause()">
+                                    <i class="fas fa-play" id="playIcon"></i>
+                                </button>
+                                <button class="control-btn" onclick="restartVideo()">
+                                    <i class="fas fa-redo"></i>
+                                </button>
+                                <button class="control-btn" onclick="toggleMute()">
+                                    <i class="fas fa-volume-up" id="muteIcon"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-card">
+                    <div class="results-header">
+                        <h3>Analysis Results</h3>
+                        <button class="close-btn" onclick="hideResults()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="results-content">
+                        <div class="result-item">
+                            <div class="result-label">Source:</div>
+                            <div class="result-value" id="sourceType"></div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">File/URL:</div>
+                            <div class="result-value" id="fileName"></div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Classification:</div>
+                            <div class="result-value">
+                                <span class="classification-badge" id="classificationBadge"></span>
+                            </div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Confidence:</div>
+                            <div class="result-value">
+                                <div class="confidence-bar">
+                                    <div class="confidence-fill" id="confidenceFill"></div>
+                                    <span class="confidence-text" id="confidenceText"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Analysis Time:</div>
+                            <div class="result-value" id="analysisTime"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading Section -->
+            <div class="loading-section" id="loadingSection" style="display: none;">
+                <div class="loading-card">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                    </div>
+                    <h3>Analyzing Video...</h3>
+                    <p id="loadingMessage">Please wait while our AI model processes your video</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <h2>How It Works</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Fourier Attention Layers</h3>
+                    <p>Advanced neural network architecture using Fourier Transform techniques for enhanced pattern recognition</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3>Frame Analysis</h3>
+                    <p>Intelligent frame extraction and analysis to detect subtle manipulation artifacts</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>High Accuracy</h3>
+                    <p>State-of-the-art deep learning model trained on extensive datasets for reliable detection</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Deep Fake Detector by Anil Katwal. Powered by Fourier Attention Layers.</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html> 

@@ -1,0 +1,9 @@
+Flask
+tensorflow
+opencv-python
+numpy
+Werkzeug
+Pillow
+scikit-learn
+requests
+yt-dlp
