@@ -33,7 +33,7 @@ The UI features:
 
 1. **Clone the repository** (if not already done):
    ```bash
-   git clone <repository-url>
+   git clone <https://github.com/Anil-Katwal/Deep-Fake-Classification-with-unique-Fourier-Attentaion-layers.git>
    cd Deep-Fake-Classification-with-unique-Fourier-Attentaion-layers
    ```
 
