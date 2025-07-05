@@ -14,7 +14,10 @@ A modern, beautiful web interface for deep fake video classification using Fouri
 -  **Responsive Design**: Works perfectly on desktop, tablet, and mobile
 -  **Secure Processing**: Files are automatically cleaned up after analysis
 
-## Screenshots
+## Screenshots of UI:
+
+<img width="1645" alt="Screenshot 2025-07-04 at 10 39 35 PM" src="https://github.com/user-attachments/assets/b78437f7-bb1d-4611-aed6-2f0ed56cb818" />
+<img width="1267" alt="Screenshot 2025-07-04 at 10 40 30 PM" src="https://github.com/user-attachments/assets/fef7ca74-22bc-425c-b67d-b23fc973b0f7" />
 
 The UI features:
 - Gradient background with modern design
